@@ -9,7 +9,7 @@
 # YML reg-ex bases and rules can be applied to ANY file in the repository, however the regular use case are profiles, permission sets and objects.
 # Those rules operate on files during commit and deployment, and remove or replace references. Depending on the file type a removal can have different consequences upon deployment.
 # e.g. removing the reference to a class in a profile will not change the existing access to this class upon deployment. 
-# However, if a reference is removed from a permission set, the access level upon deployment will be set to false.
+# However, if a reference is removed from a permission set, the access level upon deployment will be set to false, even if the access level in the target is currently true.
 # Similar, if a field reference is removed from a layout, this field will disappear upon deployment from the layout.
 
 ## some details and mechanisms, which will be used in the examples
@@ -66,11 +66,10 @@ rules:
         replace_with:
 
     ### Example for removing specific references on all files of a certain type
-    ## Use Case: Delete references for specific user permissions from all profiles or permission sets. In this case: ActivateOrder, ManageSandboxes, EditBillingInfo and ManageRealm
+    ## Use Case: Delete references for specific user permissions from all profiles. In this case: ActivateOrder, ManageSandboxes, EditBillingInfo and ManageRealm
     invalid_user_permissions: 
         extensions: # if you want to apply the rule to types of files, list the file extension names here.
             - profile
-            - permissionset
         regex_name: 'user-permission' 
         replace_values: 
             - ActivateOrder
@@ -86,7 +85,6 @@ rules:
     invalid_class_permissions:
         extensions: 
             - profile
-            - permissionset
         regex_name: 'class-permission'
         replace_values: 
             - xx__[\w_]+ # change xx for the namespace for any managed package. Credits to Bobby White for this tip!!!
